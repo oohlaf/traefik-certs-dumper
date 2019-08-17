@@ -16,6 +16,11 @@ FROM alpine:3.9
 RUN apk --update upgrade \
     && apk --no-cache --no-progress add ca-certificates
 
+RUN apk add --update libintl \
+    && apk add --virtual build_deps gettext \
+	&& cp /usr/bin/envsubst /usr/local/bin/envsubst \
+	&& apk del build_deps
+
 COPY --from=builder /go/src/github.com/ldez/traefik-certs-dumper/traefik-certs-dumper /usr/bin/traefik-certs-dumper
 
 ENTRYPOINT ["/usr/bin/traefik-certs-dumper"]
